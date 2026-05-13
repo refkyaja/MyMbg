@@ -108,6 +108,8 @@ class DashboardAdminScreen extends StatelessWidget {
                     trailing: dendaBelumLunas > 0
                         ? '(${AppFormatters.formatRupiah(dendaBelumLunas)} Belum Lunas)'
                         : null,
+                    trailingFontSize: 16,
+                    trailingColor: AppColors.red,
                   ),
                 ],
               );

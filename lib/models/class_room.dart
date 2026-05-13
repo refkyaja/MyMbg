@@ -10,7 +10,6 @@ class ClassRoom {
   final String nama;
   final Map<String, String> pj;
   final int totalSiswa;
-
   ClassRoom copyWith({
     String? id,
     String? nama,

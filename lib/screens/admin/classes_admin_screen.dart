@@ -453,6 +453,14 @@ class _ClassesAdminScreenState extends State<ClassesAdminScreen> {
                                 if (value == null || value.trim().isEmpty) {
                                   return 'Nama kelas wajib diisi';
                                 }
+                                if (!_isEditMode) {
+                                  final bool exists = widget.appState.classesData.any(
+                                    (room) => room.nama.toLowerCase() == value.trim().toLowerCase(),
+                                  );
+                                  if (exists) {
+                                    return 'data kelas sudah ada!';
+                                  }
+                                }
                                 return null;
                               },
                               onChanged: (String value) {

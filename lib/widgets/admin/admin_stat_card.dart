@@ -12,6 +12,9 @@ class AdminStatCard extends StatelessWidget {
     required this.label,
     required this.value,
     this.trailing,
+    this.valueFontSize,
+    this.trailingFontSize,
+    this.trailingColor,
   });
 
   final IconData icon;
@@ -20,6 +23,9 @@ class AdminStatCard extends StatelessWidget {
   final String label;
   final String value;
   final String? trailing;
+  final double? valueFontSize;
+  final double? trailingFontSize;
+  final Color? trailingColor;
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +66,9 @@ class AdminStatCard extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         value,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.slate900,
-                          fontSize: 26,
+                          fontSize: valueFontSize ?? 26,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
@@ -72,10 +78,10 @@ class AdminStatCard extends StatelessWidget {
                           padding: const EdgeInsets.only(bottom: 3),
                           child: Text(
                             trailing!,
-                            style: const TextStyle(
-                              color: AppColors.slate500,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
+                            style: TextStyle(
+                              color: trailingColor ?? AppColors.slate500,
+                              fontSize: trailingFontSize ?? 13,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ),
