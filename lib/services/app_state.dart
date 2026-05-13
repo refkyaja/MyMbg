@@ -12,6 +12,7 @@ import 'mock_data_service.dart';
 class AppState extends ChangeNotifier {
   AppState() {
     _initFirestore();
+    checkAndMigrateDailyData();
   }
 
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -239,9 +240,42 @@ class AppState extends ChangeNotifier {
     final record = previous.copyWith(
       status: TrackingStatus.selesai,
       denda: totalDenda,
+      dendaLunas: false,
     );
 
     _db.collection('tracking').doc(classId).set(record.toMap());
+  }
+
+  void toggleDendaLunas({required String classId, required bool isLunas}) {
+    final TrackingRecord? previous = trackingData[classId];
+    if (previous == null) return;
+
+    final record = previous.copyWith(dendaLunas: isLunas);
+    _db.collection('tracking').doc(classId).set(record.toMap());
+  }
+
+  void toggleHistoryDendaLunas({
+    required String dateLabel,
+    required String classId,
+    required bool isLunas,
+  }) {
+    final Map<String, TrackingRecord>? dateRecords = historyData[dateLabel];
+    if (dateRecords == null) return;
+
+    final TrackingRecord? previous = dateRecords[classId];
+    if (previous == null) return;
+
+    final updatedRecord = previous.copyWith(dendaLunas: isLunas);
+    final Map<String, TrackingRecord> updatedRecords =
+        Map<String, TrackingRecord>.from(dateRecords);
+    updatedRecords[classId] = updatedRecord;
+
+    final Map<String, dynamic> recordMap = {};
+    updatedRecords.forEach((key, val) {
+      recordMap[key] = val.toMap();
+    });
+
+    _db.collection('history').doc(dateLabel).set(recordMap);
   }
 
   Future<void> updateFines({required int rusak, required int hilang}) async {
@@ -249,5 +283,50 @@ class AppState extends ChangeNotifier {
       'rusak': rusak,
       'hilang': hilang,
     });
+  }
+
+  Future<void> checkAndMigrateDailyData() async {
+    try {
+      final DocumentReference systemDoc = _db.collection('settings').doc('system_state');
+      final DocumentSnapshot doc = await systemDoc.get();
+      final String currentToday = todayLabel;
+
+      if (doc.exists && doc.data() != null) {
+        final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        final String? lastActiveDate = data['last_active_date'];
+
+        if (lastActiveDate != null && lastActiveDate != currentToday) {
+          // New day started! Migrate existing tracking data to history
+          final QuerySnapshot trackingSnapshot = await _db.collection('tracking').get();
+
+          if (trackingSnapshot.docs.isNotEmpty) {
+            final Map<String, dynamic> historyRecords = {};
+            for (final d in trackingSnapshot.docs) {
+              historyRecords[d.id] = d.data();
+            }
+
+            // Save under last_active_date document in history
+            await _db.collection('history').doc(lastActiveDate).set(historyRecords);
+
+            // Delete tracking documents for fresh start
+            final WriteBatch batch = _db.batch();
+            for (final d in trackingSnapshot.docs) {
+              batch.delete(d.reference);
+            }
+            await batch.commit();
+          }
+
+          // Update system date to today
+          await systemDoc.set({'last_active_date': currentToday});
+        }
+      } else {
+        // First run, initialize system state with today's date
+        await systemDoc.set({'last_active_date': currentToday});
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error in daily data migration: $e');
+      }
+    }
   }
 }

@@ -18,6 +18,7 @@ class PublicTopNav extends StatelessWidget {
     required this.onLoginTap,
     required this.onDashboardTap,
     required this.onLogoutTap,
+    required this.onBrandTap,
   });
 
   final PublicTab activeTab;
@@ -27,6 +28,7 @@ class PublicTopNav extends StatelessWidget {
   final VoidCallback onLoginTap;
   final VoidCallback onDashboardTap;
   final VoidCallback onLogoutTap;
+  final VoidCallback onBrandTap;
 
   @override
   Widget build(BuildContext context) {
@@ -46,31 +48,37 @@ class PublicTopNav extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     // Brand Logo
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(
-                            color: AppColors.white,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.restaurant_rounded,
-                            size: 24,
-                            color: Color(0xFF009661), // Green color matching the background
-                          ),
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: onBrandTap,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: const BoxDecoration(
+                                color: AppColors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.restaurant_rounded,
+                                size: 24,
+                                color: Color(0xFF009661), // Green color matching the background
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            const Text(
+                              'MyMbg',
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 12),
-                        const Text(
-                          'MyMbg',
-                          style: TextStyle(
-                            color: AppColors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
 
                     // Main Navigation & Actions

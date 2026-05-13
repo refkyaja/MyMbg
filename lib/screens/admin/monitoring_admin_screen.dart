@@ -213,13 +213,15 @@ class _MonitoringAdminScreenState extends State<MonitoringAdminScreen> {
                         color: Colors.white,
                         fontWeight: FontWeight.w800,
                       ),
+                      dataRowMinHeight: 64.0,
+                      dataRowMaxHeight: 76.0,
                       columns: const <DataColumn>[
                         DataColumn(label: Text('Nama Kelas')),
                         DataColumn(label: Text('Penanggung Jawab')),
                         DataColumn(label: Text('Status Pengambilan')),
                         DataColumn(label: Text('Status Pengembalian')),
                         DataColumn(label: Text('Jumlah MBG')),
-                        DataColumn(label: Text('Denda')),
+                        DataColumn(label: Center(child: Text('Denda'))),
                       ],
                       rows: filteredClasses.map((ClassRoom room) {
                         final TrackingRecord? track =
@@ -282,16 +284,91 @@ class _MonitoringAdminScreenState extends State<MonitoringAdminScreen> {
                               ),
                             ),
                             DataCell(
-                              Text(
-                                track != null && track.denda > 0
-                                    ? AppFormatters.formatRupiah(track.denda)
-                                    : '-',
-                                style: TextStyle(
-                                  color: track != null && track.denda > 0
-                                      ? AppColors.red
-                                      : AppColors.slate400,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                              Center(
+                                child: track != null && track.denda > 0
+                                    ? Tooltip(
+                                        message:
+                                            'Klik untuk ubah status pembayaran',
+                                        child: InkWell(
+                                          onTap: () => _showDendaStatusDialog(
+                                            context,
+                                            room.id,
+                                            track,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 6, horizontal: 10),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: track.dendaLunas
+                                                    ? AppColors.emerald
+                                                        .withOpacity(0.25)
+                                                    : AppColors.red
+                                                        .withOpacity(0.25),
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              color: track.dendaLunas
+                                                  ? AppColors.emeraldSoft
+                                                      .withOpacity(0.2)
+                                                  : AppColors.redSoft
+                                                      .withOpacity(0.2),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                Text(
+                                                  AppFormatters.formatRupiah(
+                                                      track.denda),
+                                                  style: TextStyle(
+                                                    color: track.dendaLunas
+                                                        ? AppColors.emeraldDark
+                                                        : AppColors.red,
+                                                    fontWeight: FontWeight.w700,
+                                                    decoration: track.dendaLunas
+                                                        ? TextDecoration
+                                                            .lineThrough
+                                                        : null,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                StatusBadge(
+                                                  label: track.dendaLunas
+                                                      ? 'Lunas'
+                                                      : 'Belum Lunas',
+                                                  backgroundColor: track
+                                                          .dendaLunas
+                                                      ? AppColors.emeraldSoft
+                                                      : AppColors.redSoft,
+                                                  foregroundColor: track
+                                                          .dendaLunas
+                                                      ? AppColors.emeraldDark
+                                                      : AppColors.red,
+                                                ),
+                                                const SizedBox(width: 6),
+                                                Icon(
+                                                  Icons.edit_rounded,
+                                                  size: 14,
+                                                  color: track.dendaLunas
+                                                      ? AppColors.emeraldDark
+                                                          .withOpacity(0.7)
+                                                      : AppColors.red
+                                                          .withOpacity(0.7),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : const Text(
+                                        '-',
+                                        style: TextStyle(
+                                            color: AppColors.slate400),
+                                      ),
                               ),
                             ),
                           ],
@@ -302,6 +379,94 @@ class _MonitoringAdminScreenState extends State<MonitoringAdminScreen> {
                 ),
         ],
       ),
+    );
+  }
+
+  void _showDendaStatusDialog(
+    BuildContext context,
+    String classId,
+    TrackingRecord track,
+  ) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Status Pembayaran Denda - $classId'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Denda sebesar ${AppFormatters.formatRupiah(track.denda)}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: AppColors.slate900,
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Ubah status pembayaran denda kelas ini:',
+                style: TextStyle(color: AppColors.slate600),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.slate500,
+                textStyle: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              child: const Text('Batal'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                widget.appState
+                    .toggleDendaLunas(classId: classId, isLunas: false);
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.red,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shadowColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+              ),
+              child: const Text(
+                'Belum Lunas',
+                style: TextStyle(fontWeight: FontWeight.w800),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                widget.appState
+                    .toggleDendaLunas(classId: classId, isLunas: true);
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.emerald,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shadowColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+              ),
+              child: const Text(
+                'Lunas',
+                style: TextStyle(fontWeight: FontWeight.w800),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

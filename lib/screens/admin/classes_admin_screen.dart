@@ -446,7 +446,7 @@ class _ClassesAdminScreenState extends State<ClassesAdminScreen> {
                               initialValue: _namaKelas,
                               enabled: !_isEditMode,
                               decoration: const InputDecoration(
-                                labelText: 'Nama Kelas (Rombel)',
+                                labelText: 'Nama Kelas',
                                 hintText: 'Contoh: XII IPA 1',
                               ),
                               validator: (String? value) {

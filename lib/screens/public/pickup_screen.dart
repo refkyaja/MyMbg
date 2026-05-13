@@ -37,74 +37,87 @@ class _PickupScreenState extends State<PickupScreen> {
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 760),
+          constraints: const BoxConstraints(maxWidth: 700),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              const Row(
-                children: <Widget>[
-                  CircleAvatar(
-                    backgroundColor: AppColors.emeraldSoft,
-                    foregroundColor: AppColors.emerald,
-                    child: Icon(Icons.restaurant_rounded),
-                  ),
-                  SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          'Distribusi Pengambilan',
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.slate900,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          'Validasi dan serah terima makanan bergizi',
-                          style: TextStyle(color: AppColors.slate500),
-                        ),
-                      ],
+              Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: const BoxDecoration(
+                        color: AppColors.emeraldSoft,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.restaurant_rounded,
+                        size: 32,
+                        color: AppColors.emerald,
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 14),
+                    const Text(
+                      'Pengambilan Mbg',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.slate900,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 28),
               if (_isSubmitted)
                 SectionCard(
                   backgroundColor: const Color(0xFFECFDF5),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       const Icon(
                         Icons.check_circle_rounded,
-                        size: 54,
+                        size: 64,
                         color: AppColors.emerald,
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 18),
                       const Text(
-                        'Pengambilan Disahkan!',
+                        'Pengambilan Berhasil',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w800,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w900,
                           color: AppColors.slate900,
+                          letterSpacing: -0.5,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       const Text(
-                        'Distribusi MBG telah dicatat ke sistem demo Flutter.',
-                        style: TextStyle(color: AppColors.slate600),
+                        'Pengambilan MBG telah dicatat. Selamat menikmati! 😊',
+                        style: TextStyle(
+                          color: AppColors.slate600,
+                          fontSize: 14,
+                          height: 1.4,
+                        ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 20),
-                      CustomButton(
-                        label: 'Input Baru',
-                        onPressed: () {
-                          setState(() {
-                            _isSubmitted = false;
-                          });
-                        },
+                      const SizedBox(height: 24),
+                      Center(
+                        child: SizedBox(
+                          width: 200,
+                          child: CustomButton(
+                            label: 'Input Baru',
+                            onPressed: () {
+                              setState(() {
+                                _isSubmitted = false;
+                              });
+                            },
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -117,7 +130,7 @@ class _PickupScreenState extends State<PickupScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         const Text(
-                          'Pilih Kelas / Rombel',
+                          'Pilih Kelas',
                           style: TextStyle(
                             color: AppColors.slate700,
                             fontWeight: FontWeight.w700,

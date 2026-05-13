@@ -718,12 +718,14 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                            child: Text(
-                              'Denda',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w800,
+                            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                            child: Center(
+                              child: Text(
+                                'Denda',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w800,
+                                ),
                               ),
                             ),
                           ),
@@ -776,15 +778,78 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                              child: Text(
-                                entry.value.denda > 0
-                                    ? AppFormatters.formatRupiah(entry.value.denda)
-                                    : '-',
-                                style: TextStyle(
-                                  color: entry.value.denda > 0 ? AppColors.red : AppColors.slate400,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                              child: Center(
+                                child: entry.value.denda > 0
+                                    ? Tooltip(
+                                        message: 'Klik untuk ubah status pembayaran',
+                                        child: InkWell(
+                                          onTap: () => _showHistoryDendaStatusDialog(
+                                            context,
+                                            date,
+                                            entry.key,
+                                            entry.value,
+                                          ),
+                                          borderRadius: BorderRadius.circular(12),
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 6, horizontal: 10),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: entry.value.dendaLunas
+                                                    ? AppColors.emerald.withOpacity(0.25)
+                                                    : AppColors.red.withOpacity(0.25),
+                                              ),
+                                              borderRadius: BorderRadius.circular(12),
+                                              color: entry.value.dendaLunas
+                                                  ? AppColors.emeraldSoft.withOpacity(0.2)
+                                                  : AppColors.redSoft.withOpacity(0.2),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                Text(
+                                                  AppFormatters.formatRupiah(entry.value.denda),
+                                                  style: TextStyle(
+                                                    color: entry.value.dendaLunas
+                                                        ? AppColors.emeraldDark
+                                                        : AppColors.red,
+                                                    fontWeight: FontWeight.w700,
+                                                    decoration: entry.value.dendaLunas
+                                                        ? TextDecoration.lineThrough
+                                                        : null,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                StatusBadge(
+                                                  label: entry.value.dendaLunas
+                                                      ? 'Lunas'
+                                                      : 'Belum Lunas',
+                                                  backgroundColor: entry.value.dendaLunas
+                                                      ? AppColors.emeraldSoft
+                                                      : AppColors.redSoft,
+                                                  foregroundColor: entry.value.dendaLunas
+                                                      ? AppColors.emeraldDark
+                                                      : AppColors.red,
+                                                ),
+                                                const SizedBox(width: 6),
+                                                Icon(
+                                                  Icons.edit_rounded,
+                                                  size: 14,
+                                                  color: entry.value.dendaLunas
+                                                      ? AppColors.emeraldDark.withOpacity(0.7)
+                                                      : AppColors.red.withOpacity(0.7),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : const Text(
+                                        '-',
+                                        style: TextStyle(color: AppColors.slate400),
+                                      ),
                               ),
                             ),
                           ],
@@ -859,6 +924,101 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  void _showHistoryDendaStatusDialog(
+    BuildContext context,
+    String dateLabel,
+    String classId,
+    TrackingRecord track,
+  ) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Status Denda Riwayat - $classId'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Denda sebesar ${AppFormatters.formatRupiah(track.denda)}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: AppColors.slate900,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Ubah status pembayaran denda pada riwayat tanggal $dateLabel:',
+                style: const TextStyle(color: AppColors.slate600),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.slate500,
+                textStyle: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              child: const Text('Batal'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                widget.appState.toggleHistoryDendaLunas(
+                  dateLabel: dateLabel,
+                  classId: classId,
+                  isLunas: false,
+                );
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.red,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shadowColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+              ),
+              child: const Text(
+                'Belum Lunas',
+                style: TextStyle(fontWeight: FontWeight.w800),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                widget.appState.toggleHistoryDendaLunas(
+                  dateLabel: dateLabel,
+                  classId: classId,
+                  isLunas: true,
+                );
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.emerald,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shadowColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+              ),
+              child: const Text(
+                'Lunas',
+                style: TextStyle(fontWeight: FontWeight.w800),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -31,6 +31,9 @@ class DashboardAdminScreen extends StatelessWidget {
       0,
       (int sum, TrackingRecord record) => sum + record.denda,
     );
+    final int dendaBelumLunas = appState.trackingData.values
+        .where((record) => !record.dendaLunas)
+        .fold(0, (int sum, TrackingRecord record) => sum + record.denda);
     final List<MapEntry<String, TrackingRecord>> recentActivities = appState
         .trackingData
         .entries
@@ -102,6 +105,9 @@ class DashboardAdminScreen extends StatelessWidget {
                     iconColor: AppColors.red,
                     label: 'Akumulasi Denda',
                     value: AppFormatters.formatRupiah(totalDenda),
+                    trailing: dendaBelumLunas > 0
+                        ? '(${AppFormatters.formatRupiah(dendaBelumLunas)} Belum Lunas)'
+                        : null,
                   ),
                 ],
               );

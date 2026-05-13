@@ -6,24 +6,28 @@ class TrackingRecord {
     required this.mbgDiambil,
     this.waktuAmbil,
     this.denda = 0,
+    this.dendaLunas = false,
   });
 
   final TrackingStatus status;
   final int mbgDiambil;
   final DateTime? waktuAmbil;
   final int denda;
+  final bool dendaLunas;
 
   TrackingRecord copyWith({
     TrackingStatus? status,
     int? mbgDiambil,
     DateTime? waktuAmbil,
     int? denda,
+    bool? dendaLunas,
   }) {
     return TrackingRecord(
       status: status ?? this.status,
       mbgDiambil: mbgDiambil ?? this.mbgDiambil,
       waktuAmbil: waktuAmbil ?? this.waktuAmbil,
       denda: denda ?? this.denda,
+      dendaLunas: dendaLunas ?? this.dendaLunas,
     );
   }
 
@@ -33,6 +37,7 @@ class TrackingRecord {
       'mbgDiambil': mbgDiambil,
       'waktuAmbil': waktuAmbil?.toIso8601String(),
       'denda': denda,
+      'dendaLunas': dendaLunas,
     };
   }
 
@@ -50,6 +55,7 @@ class TrackingRecord {
       mbgDiambil: map['mbgDiambil'] ?? 0,
       waktuAmbil: waktuAmbil,
       denda: map['denda'] ?? 0,
+      dendaLunas: map['dendaLunas'] == true,
     );
   }
 }

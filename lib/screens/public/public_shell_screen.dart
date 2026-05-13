@@ -50,6 +50,7 @@ class _PublicShellScreenState extends State<PublicShellScreen> {
                 onLoginTap: widget.appState.goToRoleSelection,
                 onDashboardTap: widget.appState.goToAdmin,
                 onLogoutTap: widget.appState.logoutAdmin,
+                onBrandTap: widget.appState.goToRoleSelection,
               ),
               Expanded(child: _buildContent()),
             ],

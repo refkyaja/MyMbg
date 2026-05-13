@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
-                              Icons.lock_rounded,
+                              Icons.restaurant_rounded,
                               size: 42,
                               color: Colors.white,
                             ),
@@ -188,46 +188,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               label: 'Login',
                               onPressed: _submit,
                               expanded: true,
-                            ),
-                            const SizedBox(height: 20),
-                            Container(
-                              padding: const EdgeInsets.all(14),
-                              decoration: BoxDecoration(
-                                color: AppColors.slate50,
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Text.rich(
-                                TextSpan(
-                                  style: const TextStyle(
-                                    color: AppColors.slate500,
-                                    fontSize: 12,
-                                  ),
-                                  children: <InlineSpan>[
-                                    const TextSpan(text: 'Demo akses admin: '),
-                                    const TextSpan(
-                                      text: 'user ',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const TextSpan(
-                                      text: 'admin',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                    ),
-                                    const TextSpan(text: ' | pass '),
-                                    TextSpan(
-                                      text:
-                                          widget.appState.adminProfile.password,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
                             ),
                           ],
                         ),

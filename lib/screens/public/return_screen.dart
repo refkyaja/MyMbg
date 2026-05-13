@@ -61,75 +61,87 @@ class _ReturnScreenState extends State<ReturnScreen> {
         ? null
         : widget.appState.trackingData[_selectedClass!.id];
 
+    final int mbgDiambil = selectedTracking?.mbgDiambil ?? 0;
+    final int totalKembali = int.tryParse(_totalKembaliController.text) ?? 0;
+    final bool isJumlahSama = mbgDiambil == totalKembali;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 760),
+          constraints: const BoxConstraints(maxWidth: 700),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              const Row(
-                children: <Widget>[
-                  CircleAvatar(
-                    backgroundColor: AppColors.amberSoft,
-                    foregroundColor: AppColors.amber,
-                    child: Icon(Icons.assignment_return_rounded),
-                  ),
-                  SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          'Rekap Pengembalian',
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.slate900,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          'Pengecekan inventaris kotak makan',
-                          style: TextStyle(color: AppColors.slate500),
-                        ),
-                      ],
+              Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: const BoxDecoration(
+                        color: AppColors.amberSoft,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.assignment_return_rounded,
+                        size: 32,
+                        color: AppColors.amber,
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 14),
+                    const Text(
+                      'Pengembalian Mbg',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.slate900,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 28),
               if (_isSubmitted)
                 SectionCard(
                   backgroundColor: const Color(0xFFFFFBEB),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       const Icon(
                         Icons.check_circle_rounded,
-                        size: 54,
-                        color: AppColors.amber,
+                        size: 64,
+                        color: AppColors.emerald,
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 18),
                       const Text(
                         'Rekap Berhasil Disimpan!',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w800,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w900,
                           color: AppColors.slate900,
+                          letterSpacing: -0.5,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                       const SizedBox(height: 10),
                       const Text(
-                        'Data pengembalian sudah masuk ke state aplikasi demo.',
-                        style: TextStyle(color: AppColors.slate600),
+                        'Data pengembalian sudah kami catat.',
+                        style: TextStyle(
+                          color: AppColors.slate600,
+                          fontSize: 14,
+                          height: 1.4,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       if (_lastDenda > 0) ...<Widget>[
                         const SizedBox(height: 16),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
+                            horizontal: 20,
                             vertical: 12,
                           ),
                           decoration: BoxDecoration(
@@ -140,20 +152,38 @@ class _ReturnScreenState extends State<ReturnScreen> {
                             'Tagihan denda: ${AppFormatters.formatRupiah(_lastDenda)}',
                             style: const TextStyle(
                               color: AppColors.red,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w800,
                             ),
                           ),
                         ),
+                        const SizedBox(height: 12),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 24),
+                          child: Text(
+                            'Mohon segera melunasi denda tersebut kepada pihak admin',
+                            style: TextStyle(
+                              color: AppColors.red,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              height: 1.4,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ],
-                      const SizedBox(height: 20),
-                      CustomButton(
-                        label: 'Selesai',
-                        onPressed: () {
-                          setState(() {
-                            _isSubmitted = false;
-                          });
-                        },
-                        backgroundColor: AppColors.amber,
+                      const SizedBox(height: 24),
+                      Center(
+                        child: SizedBox(
+                          width: 200,
+                          child: CustomButton(
+                            label: 'Selesai',
+                            onPressed: () {
+                              setState(() {
+                                _isSubmitted = false;
+                              });
+                            },
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -187,7 +217,7 @@ class _ReturnScreenState extends State<ReturnScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               const Text(
-                                'Pilih Kelas / Rombel',
+                                'Pilih Kelas',
                                 style: TextStyle(
                                   color: AppColors.slate700,
                                   fontWeight: FontWeight.w700,
@@ -294,13 +324,32 @@ class _ReturnScreenState extends State<ReturnScreen> {
                                 controller: _totalKembaliController,
                                 keyboardType: TextInputType.number,
                                 decoration: const InputDecoration(
-                                  labelText: 'Total Kotak Kembali',
+                                  labelText: 'Total Mbg kembali',
                                 ),
                                 validator: (String? value) {
                                   if (value == null || value.trim().isEmpty) {
-                                    return 'Isi total kotak kembali';
+                                    return 'Isi total Mbg kembali';
                                   }
                                   return null;
+                                },
+                                onChanged: (String value) {
+                                  setState(() {
+                                    final int currentKembali = int.tryParse(value) ?? 0;
+                                    if (currentKembali != mbgDiambil) {
+                                      if (_kondisi == 'Lengkap') {
+                                        _kondisi = '';
+                                      }
+                                      if (_kondisi == 'Rusak' || _kondisi == 'Hilang') {
+                                        _jumlahRusakController.text =
+                                            (mbgDiambil - currentKembali)
+                                                .clamp(0, mbgDiambil)
+                                                .toString();
+                                      }
+                                    } else {
+                                      _kondisi = 'Lengkap';
+                                      _jumlahRusakController.text = '0';
+                                    }
+                                  });
                                 },
                               ),
                               const SizedBox(height: 20),
@@ -317,18 +366,30 @@ class _ReturnScreenState extends State<ReturnScreen> {
                                 runSpacing: 10,
                                 children: <String>['Lengkap', 'Rusak', 'Hilang']
                                     .map(
-                                      (String value) => ChoiceChip(
-                                        label: Text(value),
-                                        selected: _kondisi == value,
-                                        onSelected: (_) {
-                                          setState(() {
-                                            _kondisi = value;
-                                            if (value == 'Lengkap') {
-                                              _jumlahRusakController.text = '0';
-                                            }
-                                          });
-                                        },
-                                      ),
+                                      (String value) {
+                                        final bool isLengkap = value == 'Lengkap';
+                                        final bool isClassSelected = _selectedClass != null;
+                                        final bool canSelect = !isClassSelected || (isLengkap ? isJumlahSama : !isJumlahSama);
+
+                                        return ChoiceChip(
+                                          label: Text(value),
+                                          selected: _kondisi == value,
+                                          onSelected: canSelect
+                                              ? (bool selected) {
+                                                  setState(() {
+                                                    _kondisi = value;
+                                                    if (isLengkap) {
+                                                      _jumlahRusakController.text = '0';
+                                                    } else {
+                                                      final int diff = (mbgDiambil - totalKembali)
+                                                          .clamp(0, mbgDiambil);
+                                                      _jumlahRusakController.text = diff.toString();
+                                                    }
+                                                  });
+                                                }
+                                              : null,
+                                        );
+                                      },
                                     )
                                     .toList(),
                               ),
@@ -374,7 +435,7 @@ class _ReturnScreenState extends State<ReturnScreen> {
                                               final bool isWide =
                                                   constraints.maxWidth > 520;
                                               final Widget
-                                              jumlahRusakField = TextFormField(
+                                              jumlahRusakField = TextFormField(readOnly: true,
                                                 controller:
                                                     _jumlahRusakController,
                                                 keyboardType:
@@ -442,9 +503,8 @@ class _ReturnScreenState extends State<ReturnScreen> {
                               const SizedBox(height: 24),
                               CustomButton(
                                 label: 'Submit Pengembalian',
-                                icon: Icons.chevron_right_rounded,
+                                icon: Icons.check_circle_rounded,
                                 expanded: true,
-                                backgroundColor: AppColors.amber,
                                 onPressed: () {
                                   if (!_formKey.currentState!.validate() ||
                                       _selectedClass == null ||
