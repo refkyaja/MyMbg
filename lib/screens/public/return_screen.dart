@@ -258,6 +258,8 @@ class _ReturnScreenState extends State<ReturnScreen> {
                                     _selectedClass = room;
                                     _totalKembaliController.text =
                                         record?.mbgDiambil.toString() ?? '';
+                                    _kondisi = 'Lengkap';
+                                    _jumlahRusakController.text = '0';
                                   });
                                 },
                               ),
@@ -336,15 +338,11 @@ class _ReturnScreenState extends State<ReturnScreen> {
                                   setState(() {
                                     final int currentKembali = int.tryParse(value) ?? 0;
                                     if (currentKembali != mbgDiambil) {
-                                      if (_kondisi == 'Lengkap') {
-                                        _kondisi = '';
-                                      }
-                                      if (_kondisi == 'Rusak' || _kondisi == 'Hilang') {
-                                        _jumlahRusakController.text =
-                                            (mbgDiambil - currentKembali)
-                                                .clamp(0, mbgDiambil)
-                                                .toString();
-                                      }
+                                      _kondisi = 'Rusak';
+                                      _jumlahRusakController.text =
+                                          (mbgDiambil - currentKembali)
+                                              .clamp(0, mbgDiambil)
+                                              .toString();
                                     } else {
                                       _kondisi = 'Lengkap';
                                       _jumlahRusakController.text = '0';
