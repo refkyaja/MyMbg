@@ -6,6 +6,7 @@ import '../../utils/app_colors.dart';
 import '../../utils/app_constants.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/section_card.dart';
+import '../../widgets/common/searchable_class_dropdown.dart';
 import '../../widgets/public/signature_pad.dart';
 
 class PickupScreen extends StatefulWidget {
@@ -137,33 +138,13 @@ class _PickupScreenState extends State<PickupScreen> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        DropdownButtonFormField<String>(
+                        SearchableClassDropdown(
                           key: ValueKey<String?>(_selectedClass?.id),
-                          initialValue: _selectedClass?.id,
-                          decoration: const InputDecoration(
-                            hintText: '-- Pilih Kelas --',
-                          ),
-                          items: availableClasses
-                              .map(
-                                (ClassRoom room) => DropdownMenuItem<String>(
-                                  value: room.id,
-                                  child: Text(room.nama),
-                                ),
-                              )
-                              .toList(),
-                          validator: (String? value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Silakan pilih kelas';
-                            }
-                            return null;
-                          },
-                          onChanged: (String? value) {
+                          availableClasses: availableClasses,
+                          initialClass: _selectedClass,
+                          onSelected: (ClassRoom? room) {
                             setState(() {
-                              _selectedClass = widget.appState.classesData
-                                  .cast<ClassRoom?>()
-                                  .firstWhere(
-                                    (ClassRoom? room) => room?.id == value,
-                                  );
+                              _selectedClass = room;
                               _tidakHadir = 0;
                             });
                           },

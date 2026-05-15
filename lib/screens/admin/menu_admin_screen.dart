@@ -781,6 +781,26 @@ class _MenuComponentCardState extends State<_MenuComponentCard> {
   late TextEditingController _namaController;
   Timer? _debounce;
 
+  static const Map<String, List<String>> _kategoriEmojis = <String, List<String>>{
+    'Karbohidrat': <String>['🍚', '🍞', '🥔', '🍠', '🍝', '🥐', '🍜'],
+    'Protein': <String>['🍗', '🥩', '🍖', '🥚', '🐟', '🦐', '🍔', '🌭'],
+    'Sayuran': <String>['🥦', '🥬', '🥕', '🥒', '🍆', '🍅'],
+    'Buah-buahan': <String>['🍎', '🍌', '🍉', '🍇', '🍓', '🍊'],
+    'Kalsium': <String>['🥛', '🧀', '🍼'],
+    'Lemak': <String>['🧈', '🥜', '🥑'],
+    'Lainnya': <String>['🍲', '🥗', '🍱', '🥣', '🍛'],
+  };
+
+  static const List<String> _kategoriList = <String>[
+    'Karbohidrat',
+    'Protein',
+    'Sayuran',
+    'Buah-buahan',
+    'Kalsium',
+    'Lemak',
+    'Lainnya',
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -821,9 +841,12 @@ class _MenuComponentCardState extends State<_MenuComponentCard> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> dropdownEmojis = widget.availableEmojis.contains(widget.item.icon)
-        ? widget.availableEmojis
-        : <String>[widget.item.icon, ...widget.availableEmojis];
+    final String currentCategory = _kategoriController.text;
+    final List<String> allowedEmojis = _kategoriEmojis[currentCategory] ?? widget.availableEmojis;
+
+    final List<String> dropdownEmojis = allowedEmojis.contains(widget.item.icon)
+        ? allowedEmojis
+        : <String>[widget.item.icon, ...allowedEmojis];
 
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
@@ -897,13 +920,40 @@ class _MenuComponentCardState extends State<_MenuComponentCard> {
                 },
               );
 
-              final Widget categoryField = TextFormField(
-                controller: _kategoriController,
+              final List<String> currentKategoriList = _kategoriList.contains(_kategoriController.text)
+                  ? _kategoriList
+                  : (_kategoriController.text.isNotEmpty
+                      ? <String>[_kategoriController.text, ..._kategoriList]
+                      : _kategoriList);
+
+              final Widget categoryField = DropdownButtonFormField<String>(
+                value: _kategoriController.text.isEmpty ? null : _kategoriController.text,
+                items: currentKategoriList
+                    .map((String k) => DropdownMenuItem<String>(value: k, child: Text(k)))
+                    .toList(),
                 decoration: const InputDecoration(
                   labelText: 'Kategori Gizi',
-                  hintText: 'Misal: Sayuran',
+                  hintText: 'Pilih Kategori',
                 ),
-                onChanged: (_) => _onTextChanged(),
+                onChanged: (String? value) {
+                  if (value != null) {
+                    setState(() {
+                      _kategoriController.text = value;
+                    });
+                    
+                    final List<String> newEmojis = _kategoriEmojis[value] ?? widget.availableEmojis;
+                    String newIcon = widget.item.icon;
+                    if (newIcon.isNotEmpty && !newEmojis.contains(newIcon)) {
+                      newIcon = newEmojis.isNotEmpty ? newEmojis.first : '';
+                    }
+                    
+                    widget.onUpdate(
+                      kategori: value,
+                      nama: _namaController.text,
+                      icon: newIcon,
+                    );
+                  }
+                },
               );
 
               final Widget nameField = TextFormField(

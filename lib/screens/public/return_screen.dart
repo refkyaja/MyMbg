@@ -8,6 +8,7 @@ import '../../utils/app_constants.dart';
 import '../../utils/app_formatters.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/section_card.dart';
+import '../../widgets/common/searchable_class_dropdown.dart';
 
 class ReturnScreen extends StatefulWidget {
   const ReturnScreen({super.key, required this.appState});
@@ -224,34 +225,20 @@ class _ReturnScreenState extends State<ReturnScreen> {
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              DropdownButtonFormField<String>(
+                              SearchableClassDropdown(
                                 key: ValueKey<String?>(_selectedClass?.id),
-                                initialValue: _selectedClass?.id,
-                                decoration: const InputDecoration(
-                                  hintText: '-- Pilih Kelas --',
-                                ),
-                                items: returningClasses
-                                    .map(
-                                      (ClassRoom room) =>
-                                          DropdownMenuItem<String>(
-                                            value: room.id,
-                                            child: Text(room.nama),
-                                          ),
-                                    )
-                                    .toList(),
-                                validator: (String? value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Silakan pilih kelas';
+                                availableClasses: returningClasses,
+                                initialClass: _selectedClass,
+                                onSelected: (ClassRoom? room) {
+                                  if (room == null) {
+                                    setState(() {
+                                      _selectedClass = null;
+                                      _totalKembaliController.text = '';
+                                      _kondisi = '';
+                                      _jumlahRusakController.text = '0';
+                                    });
+                                    return;
                                   }
-                                  return null;
-                                },
-                                onChanged: (String? value) {
-                                  final ClassRoom room = widget
-                                      .appState
-                                      .classesData
-                                      .firstWhere(
-                                        (ClassRoom item) => item.id == value,
-                                      );
                                   final TrackingRecord? record =
                                       widget.appState.trackingData[room.id];
                                   setState(() {
