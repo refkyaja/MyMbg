@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "512726064771",
+    "project_id": "mymbg-86fec",
+    "storage_bucket": "mymbg-86fec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:512726064771:android:23e5f07edd9c82787445b6",
+        "android_client_info": {
+          "package_name": "com.example.aplikasi_pendataan_mbg"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIfTmAEeyGihbdUA_KlKQBOmtoxRZ1uWo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
