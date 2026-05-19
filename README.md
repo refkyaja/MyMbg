@@ -7,7 +7,7 @@ Aplikasi ini menggunakan Firebase (Cloud Firestore) sebagai sistem database utam
 ## 📱 Preview Aplikasi
 | Home | Login | Menu Publik | Dashboard Admin|
 | --- | --- | --- | --- |
-| ![Home Screen Aplikasi](portal.png) | ![Login Screen Aplikasi](login.png) | ![Menu Publik Screen Aplikasi](dashboard_public.png) | ![Dashboard Admin Screen Aplikasi](dashboard_admin.png) |
+| ![Home Screen Aplikasi](previews/portal.png) | ![Login Screen Aplikasi](previews/login.png) | ![Menu Publik Screen Aplikasi](previews/dashboard_public.png) | ![Dashboard Admin Screen Aplikasi](previews/dashboard_admin.png) |
 
 ## 📱 Fitur Utama
 
