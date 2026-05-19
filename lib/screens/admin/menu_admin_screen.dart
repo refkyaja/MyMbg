@@ -310,58 +310,6 @@ class _MenuAdminScreenState extends State<MenuAdminScreen> {
                       ],
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: widget.appState.useDummyMenuFallback 
-                          ? AppColors.emeraldSoft 
-                          : AppColors.slate100,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: widget.appState.useDummyMenuFallback 
-                            ? AppColors.emerald.withOpacity(0.3) 
-                            : AppColors.slate200,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Icon(
-                          widget.appState.useDummyMenuFallback ? Icons.visibility_rounded : Icons.visibility_off_rounded,
-                          size: 18,
-                          color: widget.appState.useDummyMenuFallback ? AppColors.emerald : AppColors.slate500,
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          'Gunakan Dummy',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: widget.appState.useDummyMenuFallback ? AppColors.emeraldDark : AppColors.slate600,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Switch(
-                          value: widget.appState.useDummyMenuFallback,
-                          onChanged: (bool value) {
-                            widget.appState.toggleDummyMenuFallback(value);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(value 
-                                    ? 'Data dummy akan ditampilkan ke publik jika menu kosong.' 
-                                    : 'Data dummy tidak akan ditampilkan.'),
-                                duration: const Duration(seconds: 2),
-                              ),
-                            );
-                          },
-                          activeColor: AppColors.emerald,
-                          activeTrackColor: AppColors.emeraldSoft,
-                          inactiveThumbColor: AppColors.slate400,
-                          inactiveTrackColor: AppColors.slate200,
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
               const SizedBox(height: 24),
