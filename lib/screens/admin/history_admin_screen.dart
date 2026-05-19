@@ -31,11 +31,19 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Extract unique years and months from history data
+    // Combine history data with today's tracking data so it's immediately visible
+    final Map<String, Map<String, TrackingRecord>> combinedHistory =
+        Map<String, Map<String, TrackingRecord>>.from(widget.appState.historyData);
+    
+    if (widget.appState.trackingData.isNotEmpty) {
+      combinedHistory[widget.appState.todayLabel] = widget.appState.trackingData;
+    }
+
+    // Extract unique years and months from combined history data
     final List<String> availableYears = <String>[];
     final List<String> availableMonths = <String>[];
 
-    for (final String date in widget.appState.historyData.keys) {
+    for (final String date in combinedHistory.keys) {
       final List<String> parts = date.split(' ');
       if (parts.length >= 3) {
         final String year = parts.last;
@@ -62,7 +70,7 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
       return _buildDetailScreen(_selectedDate!);
     }
 
-    final List<String> filteredDates = widget.appState.historyData.keys.where((String date) {
+    final List<String> filteredDates = combinedHistory.keys.where((String date) {
       final List<String> parts = date.split(' ');
       if (parts.length >= 3) {
         final String year = parts.last;
@@ -77,6 +85,16 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
       }
       return true;
     }).toList();
+
+    // Sort chronologically (newest first)
+    filteredDates.sort((a, b) {
+      final DateTime? dateA = AppFormatters.parseDateLabelToDateTime(a);
+      final DateTime? dateB = AppFormatters.parseDateLabelToDateTime(b);
+      if (dateA != null && dateB != null) {
+        return dateB.compareTo(dateA); // Descending
+      }
+      return 0; // Fallback
+    });
 
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
@@ -219,7 +237,7 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
                 }
 
                 // Count if there is data on selected month
-                final List<String> monthlyRecords = widget.appState.historyData.keys.where((String date) {
+                final List<String> monthlyRecords = combinedHistory.keys.where((String date) {
                   final List<String> parts = date.split(' ');
                   if (parts.length >= 3) {
                     final String year = parts.last;
@@ -308,7 +326,7 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
                               final List<int> bytes = await ReportGenerator.generatePdf(
                                 month: _filterBulan,
                                 year: _filterTahun,
-                                historyData: widget.appState.historyData,
+                                historyData: combinedHistory,
                               );
                               saveAndDownloadFile(
                                 bytes,
@@ -345,7 +363,7 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
                               final List<int> bytes = ReportGenerator.generateExcel(
                                 month: _filterBulan,
                                 year: _filterTahun,
-                                historyData: widget.appState.historyData,
+                                historyData: combinedHistory,
                               );
                               saveAndDownloadFile(
                                 bytes,
@@ -452,7 +470,7 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
               itemBuilder: (BuildContext context, int index) {
                 final String date = filteredDates[index];
                 final Map<String, TrackingRecord> records =
-                    widget.appState.historyData[date]!;
+                    combinedHistory[date]!;
                 final int totalDenda = records.values.fold(
                   0,
                   (int sum, TrackingRecord record) => sum + record.denda,
@@ -544,7 +562,15 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
 
   // Premium Sub-Screen: History Detail Page
   Widget _buildDetailScreen(String date) {
-    final Map<String, TrackingRecord> records = widget.appState.historyData[date]!;
+    // We also need to check combined history here since we might be viewing today's tracking data
+    final Map<String, Map<String, TrackingRecord>> combinedHistory =
+        Map<String, Map<String, TrackingRecord>>.from(widget.appState.historyData);
+    
+    if (widget.appState.trackingData.isNotEmpty) {
+      combinedHistory[widget.appState.todayLabel] = widget.appState.trackingData;
+    }
+
+    final Map<String, TrackingRecord> records = combinedHistory[date] ?? <String, TrackingRecord>{};
     
     // Calculate summaries
     final int totalKelas = records.length;

@@ -20,7 +20,8 @@ class AppState extends ChangeNotifier {
   AppView currentView = AppView.roleSelection;
   bool isAdminLoggedIn = false;
 
-  MenuData menuData = MockDataService.initialMenuData;
+  bool useDummyMenuFallback = true;
+  MenuData menuData = MockDataService.initialMenuData.copyWith(isDummy: true);
   List<ClassRoom> classesData = MockDataService.initialClassesData;
   AdminProfile adminProfile = MockDataService.initialAdminProfile;
   Map<String, TrackingRecord> trackingData = <String, TrackingRecord>{};
@@ -36,13 +37,14 @@ class AppState extends ChangeNotifier {
 
   void _initFirestore() {
     // 1. Listen to Menu Data
-    _db.collection('menu').doc('today').snapshots().listen((doc) {
+    _db.collection('menu').doc(todayLabel).snapshots().listen((doc) {
       if (doc.exists && doc.data() != null) {
         menuData = MenuData.fromMap(doc.data()!);
         notifyListeners();
       } else {
-        // Populate default if not present in Firestore
-        _db.collection('menu').doc('today').set(MockDataService.initialMenuData.toMap());
+        // Fallback to dummy data locally if not present in Firestore
+        menuData = MockDataService.initialMenuData.copyWith(isDummy: true);
+        notifyListeners();
       }
     });
 
@@ -125,6 +127,17 @@ class AppState extends ChangeNotifier {
         });
       }
     });
+
+    // 7. Listen to System State for Dummy Fallback
+    _db.collection('settings').doc('system_state').snapshots().listen((doc) {
+      if (doc.exists && doc.data() != null) {
+        final Map<String, dynamic> data = doc.data()!;
+        if (data.containsKey('use_dummy_menu_fallback')) {
+          useDummyMenuFallback = data['use_dummy_menu_fallback'];
+          notifyListeners();
+        }
+      }
+    });
   }
 
   String getPjHariIni(ClassRoom? classRoom) {
@@ -164,7 +177,7 @@ class AppState extends ChangeNotifier {
 
   bool loginAdmin({required String username, required String password}) {
     final bool isValid =
-        username == 'admin' && password == adminProfile.password;
+        username == adminProfile.username && password == adminProfile.password;
 
     if (isValid) {
       isAdminLoggedIn = true;
@@ -182,7 +195,17 @@ class AppState extends ChangeNotifier {
   }
 
   void updateMenuData(MenuData newMenuData) {
-    _db.collection('menu').doc('today').set(newMenuData.toMap());
+    final MenuData dataToSave = newMenuData.copyWith(isDummy: false);
+    _db.collection('menu').doc(todayLabel).set(dataToSave.toMap());
+  }
+
+  Future<void> toggleDummyMenuFallback(bool value) async {
+    useDummyMenuFallback = value;
+    notifyListeners();
+    await _db.collection('settings').doc('system_state').set(
+      <String, dynamic>{'use_dummy_menu_fallback': value},
+      SetOptions(merge: true),
+    );
   }
 
   void updateAdminProfile(AdminProfile newProfile) {

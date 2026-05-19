@@ -67,7 +67,7 @@ class DashboardAdminScreen extends StatelessWidget {
                   ? (constraints.maxWidth > 1100 ? 2.4 : 1.8)
                   : columns == 2
                       ? 2.1
-                      : 3.2;
+                      : 2.5;
               return GridView.count(
                 crossAxisCount: columns,
                 shrinkWrap: true,
@@ -105,10 +105,11 @@ class DashboardAdminScreen extends StatelessWidget {
                     iconColor: AppColors.red,
                     label: 'Akumulasi Denda',
                     value: AppFormatters.formatRupiah(totalDenda),
+                    valueFontSize: 17, // Label is 14, Value is ~120% of Label to keep it larger but proportional
                     trailing: dendaBelumLunas > 0
                         ? '(${AppFormatters.formatRupiah(dendaBelumLunas)} Belum Lunas)'
                         : null,
-                    trailingFontSize: 16,
+                    trailingFontSize: 13,
                     trailingColor: AppColors.red,
                   ),
                 ],

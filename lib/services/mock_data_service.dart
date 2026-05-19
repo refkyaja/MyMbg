@@ -39,12 +39,10 @@ class MockDataService {
       ),
       MenuComponent(
         id: 5,
-        kategori: 'Buah & Susu',
-        nama: 'Pisang & Susu UHT 200ml',
+        kategori: 'Buah',
+        nama: 'Pisang',
         icon: '🍌',
       ),
-      MenuComponent(id: 6, kategori: '', nama: '', icon: '🥛'),
-      MenuComponent(id: 7, kategori: '', nama: '', icon: '🍎'),
     ],
   );
 
@@ -100,6 +98,7 @@ class MockDataService {
   ];
 
   static AdminProfile get initialAdminProfile => const AdminProfile(
+    username: 'admin',
     name: 'Administrator Utama',
     email: 'admin@mymbg.com',
     photo:

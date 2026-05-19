@@ -17,6 +17,12 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMenuEmpty = appState.menuData.isDummy && !appState.useDummyMenuFallback;
+
+    if (isMenuEmpty) {
+      return _buildEmptyMenuState(context);
+    }
+
     final List<MenuComponent> validItems = appState.menuData.validItems;
 
     return SingleChildScrollView(
@@ -404,5 +410,50 @@ class HomeScreen extends StatelessWidget {
         ),
       );
     }
+  }
+
+  Widget _buildEmptyMenuState(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const SizedBox(height: 60),
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: const BoxDecoration(
+                color: AppColors.slate50,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.restaurant_menu_rounded,
+                size: 64,
+                color: AppColors.slate400,
+              ),
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              'Menu Belum Tersedia',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+                color: AppColors.slate900,
+              ),
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'Belum ada menu yang ditambahkan untuk hari ini.\nSilakan kembali lagi nanti.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                color: AppColors.slate500,
+                height: 1.5,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -290,14 +291,26 @@ class _MenuAdminScreenState extends State<MenuAdminScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                'Manajemen Menu MBG',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Atur sajian dan detail makanan yang dibagikan hari ini',
-                style: TextStyle(color: AppColors.slate500),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'Manajemen Menu MBG',
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Atur sajian dan detail makanan yang dibagikan hari ini',
+                          style: TextStyle(color: AppColors.slate500),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 24),
               SectionCard(
@@ -745,6 +758,9 @@ class _NutritionFieldState extends State<_NutritionField> {
     return TextFormField(
       controller: _controller,
       keyboardType: TextInputType.number,
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.digitsOnly,
+      ],
       decoration: InputDecoration(labelText: widget.label),
       onChanged: (String value) {
         if (_debounce?.isActive ?? false) _debounce!.cancel();

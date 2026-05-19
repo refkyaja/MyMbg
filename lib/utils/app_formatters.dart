@@ -65,4 +65,23 @@ class AppFormatters {
     }
     return '${parts[2]} ${parts[3]}';
   }
+
+  static DateTime? parseDateLabelToDateTime(String dateLabel) {
+    // Expected format: "Senin, 19 Mei 2026"
+    try {
+      final List<String> parts = dateLabel.split(' ');
+      if (parts.length < 4) return null;
+
+      final int day = int.parse(parts[1]);
+      final String monthStr = parts[2];
+      final int year = int.parse(parts[3]);
+
+      final int month = _monthNames.indexOf(monthStr) + 1;
+      if (month <= 0) return null;
+
+      return DateTime(year, month, day);
+    } catch (e) {
+      return null;
+    }
+  }
 }
