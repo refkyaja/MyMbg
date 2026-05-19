@@ -5,8 +5,9 @@ Aplikasi Pendataan MBG adalah sebuah aplikasi multi-platform (Android, iOS, Web,
 Aplikasi ini menggunakan Firebase (Cloud Firestore) sebagai sistem database utama serta dilengkapi fitur untuk mengekspor laporan dalam format PDF dan Excel.
 
 ## 📱 Preview Aplikasi
-### Halaman Portal
-![Home Screen Aplikasi](flutter_01.png)
+| Home | Login | Menu Publik | Dashboard Admin|
+| --- | --- | --- | --- |
+| ![Home Screen Aplikasi](portal.png) | ![Login Screen Aplikasi](login.png) | ![Menu Publik Screen Aplikasi](dashboard_public.png) | ![Dashboard Admin Screen Aplikasi](dashboard_admin.png) |
 
 ## 📱 Fitur Utama
 
