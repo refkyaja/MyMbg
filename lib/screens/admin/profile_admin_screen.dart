@@ -325,26 +325,51 @@ class _ProfileAdminScreenState extends State<ProfileAdminScreen> {
                           builder: (BuildContext context, BoxConstraints constraints) {
                             final bool isWide = constraints.maxWidth > 640;
 
-                            final Widget avatar = Stack(
+                            final Widget avatar = Column(
                               children: <Widget>[
-                                SizedBox(
-                                  width: 110,
-                                  height: 110,
-                                  child: ClipOval(
-                                    child: _buildAvatarWidget(initial),
-                                  ),
-                                ),
-                                Positioned(
-                                  right: 0,
-                                  bottom: 0,
-                                  child: IconButton.filled(
-                                    onPressed: _pickAndCropImage,
-                                    style: IconButton.styleFrom(
-                                      backgroundColor: AppColors.emerald,
+                                Stack(
+                                  children: <Widget>[
+                                    SizedBox(
+                                      width: 110,
+                                      height: 110,
+                                      child: ClipOval(
+                                        child: _buildAvatarWidget(initial),
+                                      ),
                                     ),
-                                    icon: const Icon(Icons.camera_alt_rounded),
-                                  ),
+                                    Positioned(
+                                      right: 0,
+                                      bottom: 0,
+                                      child: IconButton.filled(
+                                        onPressed: _pickAndCropImage,
+                                        style: IconButton.styleFrom(
+                                          backgroundColor: AppColors.emerald,
+                                        ),
+                                        icon: const Icon(Icons.camera_alt_rounded),
+                                      ),
+                                    ),
+                                  ],
                                 ),
+                                if (_photo.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 12),
+                                    child: TextButton.icon(
+                                      onPressed: () {
+                                        setState(() {
+                                          _photo = '';
+                                          _isSaved = false;
+                                        });
+                                      },
+                                      style: TextButton.styleFrom(
+                                        foregroundColor: AppColors.red,
+                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                      ),
+                                      icon: const Icon(Icons.delete_outline_rounded, size: 18),
+                                      label: const Text(
+                                        'Hapus Foto',
+                                        style: TextStyle(fontWeight: FontWeight.w700),
+                                      ),
+                                    ),
+                                  ),
                               ],
                             );
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../models/class_room.dart';
 import '../../services/app_state.dart';
@@ -471,6 +472,9 @@ class _ClassesAdminScreenState extends State<ClassesAdminScreen> {
                             final Widget totalField = TextFormField(
                               initialValue: _totalSiswa,
                               keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
                               decoration: const InputDecoration(
                                 labelText: 'Total Siswa',
                                 hintText: '0',
@@ -478,6 +482,9 @@ class _ClassesAdminScreenState extends State<ClassesAdminScreen> {
                               validator: (String? value) {
                                 if (value == null || value.trim().isEmpty) {
                                   return 'Total siswa wajib diisi';
+                                }
+                                if (int.tryParse(value) == null) {
+                                  return 'Total siswa hanya boleh diisi angka';
                                 }
                                 return null;
                               },
@@ -538,6 +545,9 @@ class _ClassesAdminScreenState extends State<ClassesAdminScreen> {
                                 final String day = days[index];
                                 return TextFormField(
                                   initialValue: _pj[day],
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+                                  ],
                                   decoration: InputDecoration(
                                     labelText: day,
                                     hintText: 'Nama PJ hari $day',
@@ -545,6 +555,9 @@ class _ClassesAdminScreenState extends State<ClassesAdminScreen> {
                                   validator: (String? value) {
                                     if (value == null || value.trim().isEmpty) {
                                       return 'Nama PJ wajib diisi';
+                                    }
+                                    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
+                                      return 'Nama PJ hanya boleh diisi teks';
                                     }
                                     return null;
                                   },
