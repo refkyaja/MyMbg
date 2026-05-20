@@ -63,13 +63,19 @@ lib/
 
 ## 🚀 Cara Menjalankan Aplikasi (Instructions / How to Use)
 
-### Prasyarat (Prerequisites)
+
+### Cara 1: Download via Release page
+Download melalui release terbaru berikut ini.
+- [MyMBG v1.0.0](https://github.com/refkyaja/MyMbg/releases/tag/MyMBG-v1.0.0)
+
+### Cara 2: Clone/Build Project
+#### Prasyarat (Prerequisites)
 Pastikan Anda sudah menginstal:
 - [Flutter SDK](https://docs.flutter.dev/get-started/install) (versi 3.9.2 atau lebih baru)
 - IDE (VS Code, Android Studio, dll.)
 - Emulator atau perangkat fisik untuk pengujian.
 
-### Langkah-langkah (Steps)
+#### Langkah-langkah (Steps)
 1. **Clone/Buka Project**:
    Buka folder project ini di terminal atau IDE pilihan Anda.
    
