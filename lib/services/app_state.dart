@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/admin_profile.dart';
 import '../models/class_room.dart';
+import '../models/feedback_entry.dart';
 import '../models/menu_data.dart';
 import '../models/tracking_record.dart';
 import '../utils/app_constants.dart';
@@ -20,13 +21,14 @@ class AppState extends ChangeNotifier {
   AppView currentView = AppView.roleSelection;
   bool isAdminLoggedIn = false;
 
-  bool useDummyMenuFallback = true;
+  bool isAdminDarkMode = false;
   MenuData menuData = MockDataService.initialMenuData.copyWith(isDummy: true);
   List<ClassRoom> classesData = MockDataService.initialClassesData;
   AdminProfile adminProfile = MockDataService.initialAdminProfile;
   Map<String, TrackingRecord> trackingData = <String, TrackingRecord>{};
   Map<String, Map<String, TrackingRecord>> historyData =
       MockDataService.initialHistoryData;
+  List<FeedbackEntry> feedbacksData = <FeedbackEntry>[];
 
   int dendaRusak = 15000;
   int dendaHilang = 25000;
@@ -42,7 +44,7 @@ class AppState extends ChangeNotifier {
         menuData = MenuData.fromMap(doc.data()!);
         notifyListeners();
       } else {
-        // Fallback to dummy data locally if not present in Firestore
+        // Keep public portal empty until today's menu is added by admin.
         menuData = MockDataService.initialMenuData.copyWith(isDummy: true);
         notifyListeners();
       }
@@ -54,8 +56,8 @@ class AppState extends ChangeNotifier {
         adminProfile = AdminProfile.fromMap(doc.data()!);
         notifyListeners();
       } else {
-        // Populate default if not present in Firestore
-        _db.collection('admin').doc('profile').set(MockDataService.initialAdminProfile.toMap());
+        adminProfile = MockDataService.initialAdminProfile;
+        notifyListeners();
       }
     });
 
@@ -67,10 +69,8 @@ class AppState extends ChangeNotifier {
             .toList();
         notifyListeners();
       } else {
-        // Populate defaults if collection is empty
-        for (final classRoom in MockDataService.initialClassesData) {
-          _db.collection('classes').doc(classRoom.id).set(classRoom.toMap());
-        }
+        classesData = MockDataService.initialClassesData;
+        notifyListeners();
       }
     });
 
@@ -102,14 +102,8 @@ class AppState extends ChangeNotifier {
         historyData = newHistory;
         notifyListeners();
       } else {
-        // Populate defaults if history is empty
-        MockDataService.initialHistoryData.forEach((dateLabel, classRecords) {
-          final Map<String, dynamic> recordMap = {};
-          classRecords.forEach((classId, record) {
-            recordMap[classId] = record.toMap();
-          });
-          _db.collection('history').doc(dateLabel).set(recordMap);
-        });
+        historyData = MockDataService.initialHistoryData;
+        notifyListeners();
       }
     });
 
@@ -128,15 +122,18 @@ class AppState extends ChangeNotifier {
       }
     });
 
-    // 7. Listen to System State for Dummy Fallback
-    _db.collection('settings').doc('system_state').snapshots().listen((doc) {
-      if (doc.exists && doc.data() != null) {
-        final Map<String, dynamic> data = doc.data()!;
-        if (data.containsKey('use_dummy_menu_fallback')) {
-          useDummyMenuFallback = data['use_dummy_menu_fallback'];
-          notifyListeners();
-        }
+    // 8. Listen to Feedbacks
+    _db.collection('feedbacks').snapshots().listen((snapshot) {
+      final List<FeedbackEntry> newFeedbacks = <FeedbackEntry>[];
+      for (final doc in snapshot.docs) {
+        newFeedbacks.add(FeedbackEntry.fromMap(doc.id, doc.data()));
       }
+      // Sort by date descending (newest first)
+      newFeedbacks.sort(
+        (FeedbackEntry a, FeedbackEntry b) => b.date.compareTo(a.date),
+      );
+      feedbacksData = newFeedbacks;
+      notifyListeners();
     });
   }
 
@@ -199,13 +196,9 @@ class AppState extends ChangeNotifier {
     _db.collection('menu').doc(todayLabel).set(dataToSave.toMap());
   }
 
-  Future<void> toggleDummyMenuFallback(bool value) async {
-    useDummyMenuFallback = value;
+  void toggleAdminDarkMode(bool value) {
+    isAdminDarkMode = value;
     notifyListeners();
-    await _db.collection('settings').doc('system_state').set(
-      <String, dynamic>{'use_dummy_menu_fallback': value},
-      SetOptions(merge: true),
-    );
   }
 
   void updateAdminProfile(AdminProfile newProfile) {
@@ -249,6 +242,7 @@ class AppState extends ChangeNotifier {
     required String classId,
     required String kondisi,
     required int jumlahRusakHilang,
+    String? feedback,
   }) {
     final TrackingRecord? previous = trackingData[classId];
     if (previous == null) {
@@ -267,6 +261,22 @@ class AppState extends ChangeNotifier {
     );
 
     _db.collection('tracking').doc(classId).set(record.toMap());
+
+    // Save feedback if provided
+    if (feedback != null && feedback.trim().isNotEmpty) {
+      final ClassRoom classRoom = classesData.firstWhere(
+        (ClassRoom room) => room.id == classId,
+      );
+      final String pjName = getPjHariIni(classRoom);
+
+      _db.collection('feedbacks').add(<String, dynamic>{
+        'classId': classId,
+        'className': classRoom.nama,
+        'pjName': pjName,
+        'feedback': feedback.trim(),
+        'date': DateTime.now().toIso8601String(),
+      });
+    }
   }
 
   void toggleDendaLunas({required String classId, required bool isLunas}) {

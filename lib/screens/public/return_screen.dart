@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../models/class_room.dart';
 import '../../models/tracking_record.dart';
@@ -25,6 +26,7 @@ class _ReturnScreenState extends State<ReturnScreen> {
   final TextEditingController _jumlahRusakController = TextEditingController(
     text: '0',
   );
+  final TextEditingController _feedbackController = TextEditingController();
 
   ClassRoom? _selectedClass;
   String _kondisi = '';
@@ -35,6 +37,7 @@ class _ReturnScreenState extends State<ReturnScreen> {
   void dispose() {
     _totalKembaliController.dispose();
     _jumlahRusakController.dispose();
+    _feedbackController.dispose();
     super.dispose();
   }
 
@@ -309,9 +312,18 @@ class _ReturnScreenState extends State<ReturnScreen> {
                                     },
                               ),
                               const SizedBox(height: 18),
-                              TextFormField(
+                               TextFormField(
                                 controller: _totalKembaliController,
                                 keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  TextInputFormatter.withFunction((oldValue, newValue) {
+                                    if (newValue.text.isEmpty) return newValue;
+                                    final int? val = int.tryParse(newValue.text);
+                                    if (val == null || val > mbgDiambil) return oldValue;
+                                    return newValue;
+                                  }),
+                                ],
                                 decoration: const InputDecoration(
                                   labelText: 'Total Mbg kembali',
                                 ),
@@ -319,12 +331,25 @@ class _ReturnScreenState extends State<ReturnScreen> {
                                   if (value == null || value.trim().isEmpty) {
                                     return 'Isi total Mbg kembali';
                                   }
+                                  final int? kembali = int.tryParse(value);
+                                  if (kembali == null) {
+                                    return 'Masukkan angka yang valid';
+                                  }
+                                  if (kembali < 0) {
+                                    return 'Jumlah tidak boleh kurang dari 0';
+                                  }
+                                  if (kembali > mbgDiambil) {
+                                    return 'Tidak boleh melebihi MBG diambil ($mbgDiambil)';
+                                  }
                                   return null;
                                 },
                                 onChanged: (String value) {
                                   setState(() {
                                     final int currentKembali = int.tryParse(value) ?? 0;
-                                    if (currentKembali != mbgDiambil) {
+                                    if (currentKembali > mbgDiambil || value.trim().isEmpty) {
+                                      _kondisi = '';
+                                      _jumlahRusakController.text = '0';
+                                    } else if (currentKembali != mbgDiambil) {
                                       _kondisi = 'Rusak';
                                       _jumlahRusakController.text =
                                           (mbgDiambil - currentKembali)
@@ -336,6 +361,16 @@ class _ReturnScreenState extends State<ReturnScreen> {
                                     }
                                   });
                                 },
+                              ),
+                              const SizedBox(height: 18),
+                              TextFormField(
+                                controller: _feedbackController,
+                                maxLines: 3,
+                                decoration: const InputDecoration(
+                                  labelText: 'Feedback / Saran & Masukan (Opsional)',
+                                  hintText: 'Masukkan feedback atau saran makanan hari ini...',
+                                  alignLabelWithHint: true,
+                                ),
                               ),
                               const SizedBox(height: 20),
                               const Text(
@@ -354,7 +389,9 @@ class _ReturnScreenState extends State<ReturnScreen> {
                                       (String value) {
                                         final bool isLengkap = value == 'Lengkap';
                                         final bool isClassSelected = _selectedClass != null;
-                                        final bool canSelect = !isClassSelected || (isLengkap ? isJumlahSama : !isJumlahSama);
+                                        final bool canSelect = isClassSelected &&
+                                            totalKembali <= mbgDiambil &&
+                                            (isLengkap ? isJumlahSama : !isJumlahSama);
 
                                         return ChoiceChip(
                                           label: Text(value),
@@ -512,6 +549,7 @@ class _ReturnScreenState extends State<ReturnScreen> {
                                           _jumlahRusakController.text,
                                         ) ??
                                         0,
+                                    feedback: _feedbackController.text,
                                   );
 
                                   setState(() {
@@ -521,6 +559,7 @@ class _ReturnScreenState extends State<ReturnScreen> {
                                     _kondisi = '';
                                     _totalKembaliController.clear();
                                     _jumlahRusakController.text = '0';
+                                    _feedbackController.clear();
                                   });
                                 },
                               ),

@@ -19,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String _username = '';
   String _password = '';
   String _error = '';
+  bool _obscurePassword = true;
 
   void _submit() {
     if (!_formKey.currentState!.validate()) {
@@ -164,10 +165,23 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             const SizedBox(height: 8),
                             TextFormField(
-                              obscureText: true,
-                              decoration: const InputDecoration(
-                                prefixIcon: Icon(Icons.lock_outline_rounded),
+                              obscureText: _obscurePassword,
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.lock_outline_rounded),
                                 hintText: 'Masukkan password',
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _obscurePassword = !_obscurePassword;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    _obscurePassword
+                                        ? Icons.visibility_off_rounded
+                                        : Icons.visibility_rounded,
+                                    color: AppColors.slate500,
+                                  ),
+                                ),
                               ),
                               validator: (String? value) {
                                 if (value == null || value.isEmpty) {

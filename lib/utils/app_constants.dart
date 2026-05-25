@@ -2,7 +2,7 @@ enum AppView { roleSelection, publicPortal, login, admin }
 
 enum PublicTab { home, pengambilan, pengembalian }
 
-enum AdminTab { dashboard, menu, kelas, monitoring, riwayat, profile }
+enum AdminTab { dashboard, menu, kelas, monitoring, riwayat, feedback, profile }
 
 enum TrackingStatus { belum, diambil, selesai }
 

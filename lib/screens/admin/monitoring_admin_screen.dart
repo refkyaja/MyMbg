@@ -182,12 +182,12 @@ class _MonitoringAdminScreenState extends State<MonitoringAdminScreen> {
                         ),
                       ),
                       const SizedBox(height: 18),
-                      const Text(
+                      Text(
                         'Data Tidak Ditemukan',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
-                          color: AppColors.slate800,
+                          color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.slate800,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -387,6 +387,7 @@ class _MonitoringAdminScreenState extends State<MonitoringAdminScreen> {
     String classId,
     TrackingRecord track,
   ) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -398,16 +399,16 @@ class _MonitoringAdminScreenState extends State<MonitoringAdminScreen> {
             children: <Widget>[
               Text(
                 'Denda sebesar ${AppFormatters.formatRupiah(track.denda)}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  color: AppColors.slate900,
+                  color: isDark ? Colors.white : AppColors.slate900,
                 ),
               ),
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 'Ubah status pembayaran denda kelas ini:',
-                style: TextStyle(color: AppColors.slate600),
+                style: TextStyle(color: isDark ? AppColors.slate300 : AppColors.slate600),
               ),
             ],
           ),

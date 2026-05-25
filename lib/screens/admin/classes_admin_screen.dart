@@ -429,10 +429,10 @@ class _ClassesAdminScreenState extends State<ClassesAdminScreen> {
                         const SizedBox(width: 10),
                         Text(
                           _isEditMode ? 'Edit Data Kelas' : 'Form Tambah Kelas',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w800,
-                            color: AppColors.slate900,
+                            color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.slate900,
                           ),
                         ),
                       ],
@@ -513,12 +513,12 @@ class _ClassesAdminScreenState extends State<ClassesAdminScreen> {
                           },
                     ),
                     const SizedBox(height: 24),
-                    const Text(
+                    Text(
                       'Jadwal Penanggung Jawab Mingguan',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.slate900,
+                        color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.slate900,
                       ),
                     ),
                     const SizedBox(height: 16),

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:aplikasi_pendataan_mbg/app.dart';
+import 'package:mymbg/app.dart';
 
 void main() {
   testWidgets('aplikasi menampilkan halaman publik MyMbg', (

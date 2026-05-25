@@ -116,6 +116,12 @@ class PublicTopNav extends StatelessWidget {
                           ),
                           PopupMenuButton<String>(
                             offset: const Offset(0, 50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            elevation: 8,
+                            color: Colors.white,
+                            clipBehavior: Clip.antiAlias,
                             onSelected: (String value) {
                               if (value == 'dashboard') {
                                 onDashboardTap();
@@ -127,50 +133,136 @@ class PublicTopNav extends StatelessWidget {
                                 <PopupMenuEntry<String>>[
                                   PopupMenuItem<String>(
                                     enabled: false,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          profile.name,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            color: AppColors.slate900,
+                                    padding: EdgeInsets.zero,
+                                    child: Container(
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 16,
+                                      ),
+                                      decoration: const BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: <Color>[
+                                            Color(0xFFF8FAFC),
+                                            Color(0xFFF1F5F9),
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                        border: Border(
+                                          bottom: BorderSide(
+                                            color: Color(0xFFE2E8F0),
+                                            width: 1,
                                           ),
                                         ),
-                                        const SizedBox(height: 2),
-                                        const Text(
-                                          'Administrator',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: AppColors.slate500,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            profile.name,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 15,
+                                              color: AppColors.slate900,
+                                              letterSpacing: -0.3,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                          const SizedBox(height: 6),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 3,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.emeraldSoft,
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                            ),
+                                            child: const Text(
+                                              'Administrator',
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w700,
+                                                color: AppColors.emeraldDark,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                  const PopupMenuDivider(),
-                                  const PopupMenuItem<String>(
+                                  PopupMenuItem<String>(
                                     value: 'dashboard',
-                                    child: Row(
-                                      children: <Widget>[
-                                        Icon(Icons.dashboard_rounded),
-                                        SizedBox(width: 12),
-                                        Text('Dashboard Admin'),
-                                      ],
+                                    padding: EdgeInsets.zero,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 12,
+                                      ),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Container(
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.slate100,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: const Icon(
+                                              Icons.dashboard_rounded,
+                                              size: 20,
+                                              color: AppColors.slate700,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 14),
+                                          const Text(
+                                            'Dashboard Admin',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.slate800,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                  const PopupMenuItem<String>(
+                                  PopupMenuItem<String>(
                                     value: 'logout',
-                                    child: Row(
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.logout_rounded,
-                                          color: Colors.red,
-                                        ),
-                                        SizedBox(width: 12),
-                                        Text('Logout'),
-                                      ],
+                                    padding: EdgeInsets.zero,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 12,
+                                      ),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Container(
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFFFEE2E2),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: const Icon(
+                                              Icons.logout_rounded,
+                                              size: 20,
+                                              color: Color(0xFFEF4444),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 14),
+                                          const Text(
+                                            'Logout',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              color: Color(0xFFEF4444),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],

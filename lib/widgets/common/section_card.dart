@@ -7,26 +7,27 @@ class SectionCard extends StatelessWidget {
     super.key,
     required this.child,
     this.padding = const EdgeInsets.all(20),
-    this.backgroundColor = AppColors.white,
+    this.backgroundColor,
   });
 
   final Widget child;
   final EdgeInsetsGeometry padding;
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: backgroundColor ?? (isDark ? AppColors.slate800 : AppColors.white),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.slate200),
-        boxShadow: const <BoxShadow>[
+        border: Border.all(color: isDark ? AppColors.slate700 : AppColors.slate200),
+        boxShadow: <BoxShadow>[
           BoxShadow(
-            color: Color(0x140F172A),
+            color: isDark ? const Color(0x28000000) : const Color(0x140F172A),
             blurRadius: 24,
-            offset: Offset(0, 10),
+            offset: const Offset(0, 10),
           ),
         ],
       ),

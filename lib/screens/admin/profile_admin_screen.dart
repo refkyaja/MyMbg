@@ -31,6 +31,7 @@ class _ProfileAdminScreenState extends State<ProfileAdminScreen> {
   late String _photo;
   late String _password;
   bool _isSaved = false;
+  bool _obscurePassword = true;
 
   late TextEditingController _dendaRusakController;
   late TextEditingController _dendaHilangController;
@@ -253,6 +254,7 @@ class _ProfileAdminScreenState extends State<ProfileAdminScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final String initial = _name.isNotEmpty ? _name[0].toUpperCase() : 'A';
 
     return SingleChildScrollView(
@@ -281,22 +283,22 @@ class _ProfileAdminScreenState extends State<ProfileAdminScreen> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFECFDF5),
+                      color: isDark ? const Color(0x1A10B981) : const Color(0xFFECFDF5),
                       borderRadius: BorderRadius.circular(18),
-                      border: Border.all(color: const Color(0xFFA7F3D0)),
+                      border: Border.all(color: isDark ? const Color(0x3310B981) : const Color(0xFFA7F3D0)),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: <Widget>[
-                        Icon(
+                        const Icon(
                           Icons.check_circle_rounded,
                           color: AppColors.emerald,
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: Text(
                             'Data profil berhasil diperbarui.',
                             style: TextStyle(
-                              color: AppColors.emeraldDark,
+                              color: isDark ? AppColors.emerald : AppColors.emeraldDark,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -315,9 +317,9 @@ class _ProfileAdminScreenState extends State<ProfileAdminScreen> {
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(24),
-                        decoration: const BoxDecoration(
-                          color: AppColors.slate50,
-                          borderRadius: BorderRadius.vertical(
+                        decoration: BoxDecoration(
+                          color: isDark ? AppColors.slate900 : AppColors.slate50,
+                          borderRadius: const BorderRadius.vertical(
                             top: Radius.circular(24),
                           ),
                         ),
@@ -378,10 +380,10 @@ class _ProfileAdminScreenState extends State<ProfileAdminScreen> {
                               children: <Widget>[
                                 Text(
                                   _name,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.w800,
-                                    color: AppColors.slate900,
+                                    color: isDark ? Colors.white : AppColors.slate900,
                                   ),
                                 ),
                                 const SizedBox(height: 6),
@@ -457,13 +459,26 @@ class _ProfileAdminScreenState extends State<ProfileAdminScreen> {
                               },
                             ),
                             const SizedBox(height: 16),
-                            TextFormField(
-                              initialValue: _password,
-                              obscureText: true,
-                              decoration: const InputDecoration(
-                                labelText: 'Password',
-                                prefixIcon: Icon(Icons.lock_outline_rounded),
-                              ),
+                             TextFormField(
+                               initialValue: _password,
+                               obscureText: _obscurePassword,
+                               decoration: InputDecoration(
+                                 labelText: 'Password',
+                                 prefixIcon: const Icon(Icons.lock_outline_rounded),
+                                 suffixIcon: IconButton(
+                                   onPressed: () {
+                                     setState(() {
+                                       _obscurePassword = !_obscurePassword;
+                                     });
+                                   },
+                                   icon: Icon(
+                                     _obscurePassword
+                                         ? Icons.visibility_off_rounded
+                                         : Icons.visibility_rounded,
+                                     color: AppColors.slate500,
+                                   ),
+                                 ),
+                               ),
                               validator: (String? value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Password wajib diisi';
@@ -517,7 +532,7 @@ class _ProfileAdminScreenState extends State<ProfileAdminScreen> {
                             ),
                           ),
                           const SizedBox(width: 14),
-                          const Expanded(
+                          Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -526,15 +541,15 @@ class _ProfileAdminScreenState extends State<ProfileAdminScreen> {
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w800,
-                                    color: AppColors.slate900,
+                                    color: isDark ? Colors.white : AppColors.slate900,
                                   ),
                                 ),
-                                SizedBox(height: 4),
+                                const SizedBox(height: 4),
                                 Text(
                                   'Sesuaikan biaya denda untuk boks makan siang yang rusak atau hilang',
                                   style: TextStyle(
                                     fontSize: 13,
-                                    color: AppColors.slate500,
+                                    color: isDark ? AppColors.slate400 : AppColors.slate500,
                                   ),
                                 ),
                               ],

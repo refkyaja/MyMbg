@@ -17,7 +17,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isMenuEmpty = appState.menuData.isDummy && !appState.useDummyMenuFallback;
+    final bool isMenuEmpty = appState.menuData.isDummy;
 
     if (isMenuEmpty) {
       return _buildEmptyMenuState(context);

@@ -14,6 +14,10 @@ class AdminHeader extends StatelessWidget {
     required this.onBackToPortal,
     this.showMenuButton = false,
     this.onMenuTap,
+    this.isSidebarCollapsed = false,
+    this.onToggleSidebar,
+    this.isDark = false,
+    required this.onToggleDarkMode,
   });
 
   final AdminProfile profile;
@@ -21,6 +25,10 @@ class AdminHeader extends StatelessWidget {
   final VoidCallback onBackToPortal;
   final bool showMenuButton;
   final VoidCallback? onMenuTap;
+  final bool isSidebarCollapsed;
+  final VoidCallback? onToggleSidebar;
+  final bool isDark;
+  final VoidCallback onToggleDarkMode;
 
   Widget _buildAvatarWidget(String initial) {
     if (profile.photo.isEmpty) {
@@ -129,36 +137,102 @@ class AdminHeader extends StatelessWidget {
     final bool isWide = MediaQuery.sizeOf(context).width > 720;
     final String initial = profile.name.isNotEmpty ? profile.name[0].toUpperCase() : 'A';
 
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
       height: 74,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: const BoxDecoration(
-        color: AppColors.white,
-        border: Border(bottom: BorderSide(color: AppColors.slate200)),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.slate800 : AppColors.white,
+        border: Border(
+          bottom: BorderSide(
+            color: isDark ? AppColors.slate700 : AppColors.slate200,
+          ),
+        ),
       ),
       child: Row(
         children: <Widget>[
           if (showMenuButton)
             IconButton(
               onPressed: onMenuTap,
-              icon: const Icon(Icons.menu_rounded),
+              icon: Icon(
+                Icons.menu_rounded,
+                color: isDark ? Colors.white : AppColors.slate700,
+              ),
             ),
+          if (onToggleSidebar != null && !showMenuButton)
+            IconButton(
+              onPressed: onToggleSidebar,
+              tooltip: isSidebarCollapsed ? 'Buka Sidebar' : 'Ciutkan Sidebar',
+              icon: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: Icon(
+                  isSidebarCollapsed ? Icons.menu_rounded : Icons.menu_open_rounded,
+                  key: ValueKey<bool>(isSidebarCollapsed),
+                  color: isDark ? Colors.white : AppColors.slate700,
+                ),
+              ),
+            ),
+          const SizedBox(width: 8),
           if (isWide)
-            const Expanded(
+            Expanded(
               child: Text(
-                'Panel Administrator Sistem Pendataan MBG',
+                'Panel Administrator MyMbg',
                 style: TextStyle(
-                  color: AppColors.slate500,
+                  color: isDark ? AppColors.slate400 : AppColors.slate500,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             )
           else
             const Spacer(),
+          // Dark Mode Toggle
+          Tooltip(
+            message: isDark ? 'Mode Terang' : 'Mode Gelap',
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onToggleDarkMode,
+                borderRadius: BorderRadius.circular(12),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0x33F59E0B) : const Color(0x1A334155),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    transitionBuilder: (Widget child, Animation<double> animation) {
+                      return RotationTransition(
+                        turns: Tween<double>(begin: 0.75, end: 1.0).animate(animation),
+                        child: FadeTransition(opacity: animation, child: child),
+                      );
+                    },
+                    child: Icon(
+                      isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                      key: ValueKey<bool>(isDark),
+                      color: isDark ? AppColors.amber : AppColors.slate600,
+                      size: 22,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
           TextButton.icon(
             onPressed: onBackToPortal,
-            icon: const Icon(Icons.home_rounded),
-            label: Text(isWide ? 'Home Portal' : 'Home'),
+            icon: Icon(
+              Icons.home_rounded,
+              color: isDark ? AppColors.emerald : null,
+            ),
+            label: Text(
+              isWide ? 'Home Portal' : 'Home',
+              style: TextStyle(
+                color: isDark ? AppColors.emerald : null,
+              ),
+            ),
           ),
           const SizedBox(width: 12),
           InkWell(
@@ -183,8 +257,8 @@ class AdminHeader extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           profile.name,
-                          style: const TextStyle(
-                            color: AppColors.slate900,
+                          style: TextStyle(
+                            color: isDark ? Colors.white : AppColors.slate900,
                             fontWeight: FontWeight.w700,
                           ),
                         ),

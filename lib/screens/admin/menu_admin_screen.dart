@@ -284,6 +284,7 @@ class _MenuAdminScreenState extends State<MenuAdminScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Stack(
       children: <Widget>[
         SingleChildScrollView(
@@ -300,64 +301,14 @@ class _MenuAdminScreenState extends State<MenuAdminScreen> {
                       children: <Widget>[
                         Text(
                           'Manajemen Menu MBG',
-                          style: Theme.of(context).textTheme.headlineMedium,
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                            color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.slate900,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         const Text(
                           'Atur sajian dan detail makanan yang dibagikan hari ini',
                           style: TextStyle(color: AppColors.slate500),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: widget.appState.useDummyMenuFallback 
-                          ? AppColors.emeraldSoft 
-                          : AppColors.slate100,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: widget.appState.useDummyMenuFallback 
-                            ? AppColors.emerald.withOpacity(0.3) 
-                            : AppColors.slate200,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Icon(
-                          widget.appState.useDummyMenuFallback ? Icons.visibility_rounded : Icons.visibility_off_rounded,
-                          size: 18,
-                          color: widget.appState.useDummyMenuFallback ? AppColors.emerald : AppColors.slate500,
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          'Gunakan Dummy',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: widget.appState.useDummyMenuFallback ? AppColors.emeraldDark : AppColors.slate600,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Switch(
-                          value: widget.appState.useDummyMenuFallback,
-                          onChanged: (bool value) {
-                            widget.appState.toggleDummyMenuFallback(value);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(value 
-                                    ? 'Data dummy akan ditampilkan ke publik jika menu kosong.' 
-                                    : 'Data dummy tidak akan ditampilkan.'),
-                                duration: const Duration(seconds: 2),
-                              ),
-                            );
-                          },
-                          activeColor: AppColors.emerald,
-                          activeTrackColor: AppColors.emeraldSoft,
-                          inactiveThumbColor: AppColors.slate400,
-                          inactiveTrackColor: AppColors.slate200,
                         ),
                       ],
                     ),
@@ -369,12 +320,12 @@ class _MenuAdminScreenState extends State<MenuAdminScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Text(
+                    Text(
                       'Informasi Umum & Gambar',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.slate900,
+                        color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.slate900,
                       ),
                     ),
                     const SizedBox(height: 18),
@@ -385,10 +336,10 @@ class _MenuAdminScreenState extends State<MenuAdminScreen> {
                         final Widget imageEditor = Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            const Text(
+                            Text(
                               'Judul Menu',
                               style: TextStyle(
-                                color: AppColors.slate700,
+                                color: isDark ? AppColors.slate300 : AppColors.slate700,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -406,10 +357,10 @@ class _MenuAdminScreenState extends State<MenuAdminScreen> {
                               },
                             ),
                             const SizedBox(height: 18),
-                            const Text(
+                            Text(
                               'Foto Menu Makanan',
                               style: TextStyle(
-                                color: AppColors.slate700,
+                                color: isDark ? AppColors.slate300 : AppColors.slate700,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -428,10 +379,10 @@ class _MenuAdminScreenState extends State<MenuAdminScreen> {
                         final Widget imagePreview = Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            const Text(
+                            Text(
                               'Preview Gambar',
                               style: TextStyle(
-                                color: AppColors.slate700,
+                                color: isDark ? AppColors.slate300 : AppColors.slate700,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -441,9 +392,9 @@ class _MenuAdminScreenState extends State<MenuAdminScreen> {
                               width: double.infinity,
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
-                                color: AppColors.slate50,
+                                color: isDark ? AppColors.slate900 : AppColors.slate50,
                                 borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: AppColors.slate200),
+                                border: Border.all(color: isDark ? AppColors.slate700 : AppColors.slate200),
                               ),
                               child: _buildImagePreviewWidget(),
                             ),
@@ -471,12 +422,12 @@ class _MenuAdminScreenState extends State<MenuAdminScreen> {
                       },
                     ),
                     const SizedBox(height: 28),
-                    const Text(
+                    Text(
                       'Kandungan Gizi Total',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.slate900,
+                        color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.slate900,
                       ),
                     ),
                     const SizedBox(height: 18),
@@ -558,13 +509,13 @@ class _MenuAdminScreenState extends State<MenuAdminScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        const Expanded(
+                        Expanded(
                           child: Text(
                             'Rincian Komposisi Makanan (Maks 7)',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w800,
-                              color: AppColors.slate900,
+                              color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.slate900,
                             ),
                           ),
                         ),
@@ -604,16 +555,16 @@ class _MenuAdminScreenState extends State<MenuAdminScreen> {
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
                         decoration: BoxDecoration(
-                          color: AppColors.slate50,
+                          color: isDark ? AppColors.slate800 : AppColors.slate50,
                           borderRadius: BorderRadius.circular(24),
-                          border: Border.all(color: AppColors.slate200),
+                          border: Border.all(color: isDark ? AppColors.slate700 : AppColors.slate200),
                         ),
                         child: Column(
                           children: <Widget>[
                             Container(
                               padding: const EdgeInsets.all(16),
-                              decoration: const BoxDecoration(
-                                color: AppColors.slate100,
+                              decoration: BoxDecoration(
+                                color: isDark ? AppColors.slate700 : AppColors.slate100,
                                 shape: BoxShape.circle,
                               ),
                               child: const Icon(
@@ -623,12 +574,12 @@ class _MenuAdminScreenState extends State<MenuAdminScreen> {
                               ),
                             ),
                             const SizedBox(height: 16),
-                            const Text(
+                            Text(
                               'Belum Ada Rincian Komposisi',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.slate800,
+                                color: isDark ? Colors.white : AppColors.slate800,
                               ),
                             ),
                             const SizedBox(height: 6),
@@ -909,6 +860,7 @@ class _MenuComponentCardState extends State<_MenuComponentCard> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final String currentCategory = _kategoriController.text;
     final List<String> allowedEmojis = _kategoriEmojis[currentCategory] ?? widget.availableEmojis;
 
@@ -920,9 +872,9 @@ class _MenuComponentCardState extends State<_MenuComponentCard> {
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.slate50,
+        color: isDark ? AppColors.slate800 : AppColors.slate50,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: AppColors.slate200),
+        border: Border.all(color: isDark ? AppColors.slate700 : AppColors.slate200),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -933,8 +885,8 @@ class _MenuComponentCardState extends State<_MenuComponentCard> {
               Container(
                 width: 28,
                 height: 28,
-                decoration: const BoxDecoration(
-                  color: AppColors.slate900,
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.slate700 : AppColors.slate900,
                   shape: BoxShape.circle,
                 ),
                 alignment: Alignment.center,

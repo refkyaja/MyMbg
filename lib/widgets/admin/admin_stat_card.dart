@@ -29,6 +29,8 @@ class AdminStatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return SectionCard(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Row(
@@ -49,8 +51,8 @@ class AdminStatCard extends StatelessWidget {
               children: <Widget>[
                 Text(
                   label,
-                  style: const TextStyle(
-                    color: AppColors.slate500,
+                  style: TextStyle(
+                    color: isDark ? AppColors.slate400 : AppColors.slate500,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
@@ -67,7 +69,7 @@ class AdminStatCard extends StatelessWidget {
                       Text(
                         value,
                         style: TextStyle(
-                          color: AppColors.slate900,
+                          color: isDark ? Colors.white : AppColors.slate900,
                           fontSize: valueFontSize ?? 26,
                           fontWeight: FontWeight.w800,
                         ),
@@ -79,7 +81,10 @@ class AdminStatCard extends StatelessWidget {
                           child: Text(
                             trailing!,
                             style: TextStyle(
-                              color: trailingColor ?? AppColors.slate500,
+                              color: trailingColor ??
+                                  (isDark
+                                      ? AppColors.slate400
+                                      : AppColors.slate500),
                               fontSize: trailingFontSize ?? 13,
                               fontWeight: FontWeight.w700,
                             ),

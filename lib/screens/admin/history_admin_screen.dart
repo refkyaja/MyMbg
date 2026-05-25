@@ -31,6 +31,7 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     // Combine history data with today's tracking data so it's immediately visible
     final Map<String, Map<String, TrackingRecord>> combinedHistory =
         Map<String, Map<String, TrackingRecord>>.from(widget.appState.historyData);
@@ -425,17 +426,17 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? AppColors.slate800 : Colors.white,
                 borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: AppColors.slate200),
+                border: Border.all(color: isDark ? AppColors.slate700 : AppColors.slate200),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
                     padding: const EdgeInsets.all(18),
-                    decoration: const BoxDecoration(
-                      color: AppColors.slate50,
+                    decoration: BoxDecoration(
+                      color: isDark ? AppColors.slate700 : AppColors.slate50,
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -445,12 +446,12 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
+                  Text(
                     'Tidak Ada Data Riwayat',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.slate800,
+                      color: isDark ? Colors.white : AppColors.slate800,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -480,14 +481,14 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
                   padding: const EdgeInsets.only(bottom: 14),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark ? AppColors.slate800 : Colors.white,
                       borderRadius: BorderRadius.circular(22),
-                      border: Border.all(color: AppColors.slate200),
-                      boxShadow: const <BoxShadow>[
+                      border: Border.all(color: isDark ? AppColors.slate700 : AppColors.slate200),
+                      boxShadow: <BoxShadow>[
                         BoxShadow(
-                          color: Color(0x03000000),
+                          color: isDark ? const Color(0x1A000000) : const Color(0x03000000),
                           blurRadius: 8,
-                          offset: Offset(0, 4),
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
@@ -508,7 +509,7 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: AppColors.blueSoft,
+                                  color: isDark ? const Color(0x1A2563EB) : AppColors.blueSoft,
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                                 child: const Icon(
@@ -524,10 +525,10 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
                                   children: <Widget>[
                                     Text(
                                       date,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
-                                        color: AppColors.slate900,
+                                        color: isDark ? Colors.white : AppColors.slate900,
                                       ),
                                     ),
                                     const SizedBox(height: 6),
@@ -562,6 +563,7 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
 
   // Premium Sub-Screen: History Detail Page
   Widget _buildDetailScreen(String date) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     // We also need to check combined history here since we might be viewing today's tracking data
     final Map<String, Map<String, TrackingRecord>> combinedHistory =
         Map<String, Map<String, TrackingRecord>>.from(widget.appState.historyData);
@@ -587,11 +589,11 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
           Row(
             children: <Widget>[
               IconButton(
-                icon: const Icon(Icons.arrow_back_rounded, color: AppColors.slate700),
+                icon: Icon(Icons.arrow_back_rounded, color: isDark ? Colors.white : AppColors.slate700),
                 style: IconButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  hoverColor: AppColors.slate50,
-                  side: const BorderSide(color: AppColors.slate200),
+                  backgroundColor: isDark ? AppColors.slate800 : Colors.white,
+                  hoverColor: isDark ? AppColors.slate700 : AppColors.slate50,
+                  side: BorderSide(color: isDark ? AppColors.slate700 : AppColors.slate200),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 onPressed: () {
@@ -616,10 +618,10 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
                     const SizedBox(height: 2),
                     Text(
                       date,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.slate900,
+                        color: isDark ? Colors.white : AppColors.slate900,
                       ),
                     ),
                   ],
@@ -683,14 +685,14 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(20, 20, 20, 14),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 14),
                   child: Text(
                     'Daftar Status Pengembalian Kelas',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.slate900,
+                      color: isDark ? Colors.white : AppColors.slate900,
                     ),
                   ),
                 ),
@@ -760,9 +762,9 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
                       ...records.entries.map((MapEntry<String, TrackingRecord> entry) {
                         final bool selesai = entry.value.status.name == 'selesai';
                         return TableRow(
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             border: Border(
-                              bottom: BorderSide(color: AppColors.slate100),
+                              bottom: BorderSide(color: isDark ? AppColors.slate700 : AppColors.slate100),
                             ),
                           ),
                           children: <Widget>[
@@ -770,8 +772,8 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
                               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                               child: Text(
                                 entry.key,
-                                style: const TextStyle(
-                                  color: AppColors.slate900,
+                                style: TextStyle(
+                                  color: isDark ? Colors.white : AppColors.slate900,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
@@ -797,8 +799,8 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
                               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                               child: Text(
                                 '${entry.value.mbgDiambil} Porsi',
-                                style: const TextStyle(
-                                  color: AppColors.slate700,
+                                style: TextStyle(
+                                  color: isDark ? AppColors.slate300 : AppColors.slate700,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -891,7 +893,6 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
       ),
     );
   }
-
   Widget _buildSummaryCard({
     required String title,
     required String value,
@@ -899,17 +900,18 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
     required Color iconColor,
     required Color bgColor,
   }) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppColors.slate800 : Colors.white,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: AppColors.slate200),
-        boxShadow: const <BoxShadow>[
+        border: Border.all(color: isDark ? AppColors.slate700 : AppColors.slate200),
+        boxShadow: <BoxShadow>[
           BoxShadow(
-            color: Color(0x02000000),
+            color: isDark ? const Color(0x1A000000) : const Color(0x02000000),
             blurRadius: 8,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -918,7 +920,7 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: bgColor,
+              color: isDark ? iconColor.withOpacity(0.15) : bgColor,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(icon, color: iconColor, size: 24),
@@ -939,10 +941,10 @@ class _HistoryAdminScreenState extends State<HistoryAdminScreen> {
                 const SizedBox(height: 4),
                 Text(
                   value,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.slate900,
+                    fontWeight: FontWeight.w900,
+                    color: isDark ? Colors.white : AppColors.slate900,
                   ),
                 ),
               ],

@@ -41,6 +41,8 @@ class DashboardAdminScreen extends StatelessWidget {
         .reversed
         .toList();
 
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
       child: Column(
@@ -53,7 +55,9 @@ class DashboardAdminScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             'Ringkasan operasional MBG hari ini (${appState.todayLabel})',
-            style: const TextStyle(color: AppColors.slate500),
+            style: TextStyle(
+              color: isDark ? AppColors.slate400 : AppColors.slate500,
+            ),
           ),
           const SizedBox(height: 24),
           LayoutBuilder(
@@ -121,16 +125,16 @@ class DashboardAdminScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const Row(
+                Row(
                   children: <Widget>[
-                    Icon(Icons.calendar_month_rounded, color: AppColors.blue),
-                    SizedBox(width: 10),
+                    const Icon(Icons.calendar_month_rounded, color: AppColors.blue),
+                    const SizedBox(width: 10),
                     Text(
                       'Aktivitas Terakhir Hari Ini',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.slate900,
+                        color: isDark ? Colors.white : AppColors.slate900,
                       ),
                     ),
                   ],
@@ -166,9 +170,9 @@ class DashboardAdminScreen extends StatelessWidget {
                         margin: const EdgeInsets.only(bottom: 12),
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: AppColors.slate50,
+                          color: isDark ? AppColors.slate700 : AppColors.slate50,
                           borderRadius: BorderRadius.circular(18),
-                          border: Border.all(color: AppColors.slate200),
+                          border: Border.all(color: isDark ? AppColors.slate600 : AppColors.slate200),
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,15 +201,17 @@ class DashboardAdminScreen extends StatelessWidget {
                                 children: <Widget>[
                                   Text.rich(
                                     TextSpan(
-                                      style: const TextStyle(
-                                        color: AppColors.slate700,
+                                      style: TextStyle(
+                                        color: isDark
+                                            ? AppColors.slate300
+                                            : AppColors.slate700,
                                       ),
                                       children: <InlineSpan>[
                                         TextSpan(
                                           text: entry.key,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontWeight: FontWeight.w800,
-                                            color: AppColors.slate900,
+                                            color: isDark ? Colors.white : AppColors.slate900,
                                           ),
                                         ),
                                         TextSpan(
