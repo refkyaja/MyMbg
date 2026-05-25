@@ -4,6 +4,15 @@ Aplikasi Pendataan MBG adalah sebuah aplikasi multi-platform (Android, iOS, Web,
 
 Aplikasi ini menggunakan Firebase (Cloud Firestore) sebagai sistem database utama serta dilengkapi fitur untuk mengekspor laporan dalam format PDF dan Excel.
 
+## 📱 Preview Aplikasi
+| Home | Login |
+| --- | --- |
+| ![Home Screen Aplikasi](previews/portal.png) | ![Login Screen Aplikasi](previews/login.png) |
+
+| Menu Publik | Dashboard Admin |
+| --- | --- |
+| ![Menu Publik Screen Aplikasi](previews/dashboard_public.png) | ![Dashboard Admin Screen Aplikasi](previews/dashboard_admin.png) |
+
 ## 📱 Fitur Utama
 
 Aplikasi ini dibagi menjadi beberapa peran (Role) utama, yaitu **Admin** dan **Public/Pengguna**:
@@ -54,13 +63,19 @@ lib/
 
 ## 🚀 Cara Menjalankan Aplikasi (Instructions / How to Use)
 
-### Prasyarat (Prerequisites)
+
+### Cara 1: Download via Release page
+Download melalui release terbaru berikut ini.
+- [MyMBG v1.0.0](https://github.com/refkyaja/MyMbg/releases/tag/MyMBG-v1.0.0)
+
+### Cara 2: Clone/Build Project
+#### Prasyarat (Prerequisites)
 Pastikan Anda sudah menginstal:
 - [Flutter SDK](https://docs.flutter.dev/get-started/install) (versi 3.9.2 atau lebih baru)
 - IDE (VS Code, Android Studio, dll.)
 - Emulator atau perangkat fisik untuk pengujian.
 
-### Langkah-langkah (Steps)
+#### Langkah-langkah (Steps)
 1. **Clone/Buka Project**:
    Buka folder project ini di terminal atau IDE pilihan Anda.
    
